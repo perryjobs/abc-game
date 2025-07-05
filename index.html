@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ABC Game</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>ABC Game</h1>
+    
+    <div class="letter-box" id="letter">A</div>
+
+    <div class="controls">
+      <button id="start">Start</button>
+      <button id="stop" disabled>Stop</button>
+    </div>
+
+    <form id="word-form" class="hidden">
+      <p>Letter: <span id="current-letter"></span></p>
+      <label>Boy Name: <input type="text" id="boy" required /></label>
+      <label>Girl Name: <input type="text" id="girl" required /></label>
+      <label>Animal: <input type="text" id="animal" required /></label>
+      <label>Place: <input type="text" id="place" required /></label>
+      <p>Time left: <span id="timer">30</span>s</p>
+      <button type="submit">Submit</button>
+    </form>
+
+    <div id="result" class="result"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
