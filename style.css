@@ -102,3 +102,23 @@ form p {
     margin-bottom: 10px;
   }
 }
+.top-controls {
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#result {
+  transition: all 0.4s ease;
+}
+
+.result.success {
+  color: green;
+  transform: scale(1.1);
+}
+
+.result.fail {
+  color: red;
+  transform: scale(1.1);
+}
