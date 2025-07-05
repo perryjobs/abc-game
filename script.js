@@ -30,6 +30,8 @@ let score = 0;
 let soundEnabled = true;
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
+const themeToggle = document.getElementById("theme-toggle");
+
 // Sample Data
 const validAnimals = ["ALLIGATOR", "BEAR", "CAT", "DOG", "ELEPHANT", "FLAMINGO", "GIRAFFE", "HORSE", "IGUANA", "JAGUAR", "KANGAROO", "LION", "MONKEY", "NARWHAL", "OWL", "PENGUIN", "QUAIL", "RABBIT", "SNAKE", "TIGER", "URIAL", "VULTURE", "WOLF", "XERUS", "YAK", "ZEBRA"];
 const validCountries = ["ARGENTINA", "BRAZIL", "CANADA", "DENMARK", "EGYPT", "FRANCE", "GERMANY", "HAITI", "INDIA", "JAMAICA", "KENYA", "LIBYA", "MEXICO", "NIGERIA", "OMAN", "PERU", "QATAR", "RUSSIA", "SPAIN", "THAILAND", "UGANDA", "VENEZUELA", "WALES", "YEMEN", "ZAMBIA"];
@@ -193,3 +195,24 @@ function updateLeaderboard() {
     leaderboardList.appendChild(li);
   });
 }
+// === Dark Mode Theme ===
+themeToggle.onchange = () => {
+  const isDark = themeToggle.checked;
+  document.body.classList.toggle("dark", isDark);
+  localStorage.setItem("abcGameTheme", isDark ? "dark" : "light");
+};
+
+// Load Theme Preference on Page Load
+window.onload = () => {
+  const savedTheme = localStorage.getItem("abcGameTheme");
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark");
+    themeToggle.checked = true;
+  }
+
+  const savedSound = localStorage.getItem("abcGameSound");
+  if (savedSound === "off") {
+    soundToggle.checked = false;
+    soundEnabled = false;
+  }
+};
