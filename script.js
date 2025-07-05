@@ -72,3 +72,36 @@ function validateForm(timeout) {
   form.reset();
   form.classList.add("hidden");
 }
+// Sample data (can be expanded)
+const validAnimals = ["ALLIGATOR", "BEAR", "CAT", "DOG", "ELEPHANT", "FLAMINGO", "GIRAFFE", "HORSE", "IGUANA", "JAGUAR", "KANGAROO", "LION", "MONKEY", "NARWHAL", "OWL", "PENGUIN", "QUAIL", "RABBIT", "SNAKE", "TIGER", "URIAL", "VULTURE", "WOLF", "XERUS", "YAK", "ZEBRA"];
+const validCountries = ["ARGENTINA", "BRAZIL", "CANADA", "DENMARK", "EGYPT", "FRANCE", "GERMANY", "HAITI", "INDIA", "JAMAICA", "KENYA", "LIBYA", "MEXICO", "NIGERIA", "OMAN", "PERU", "QATAR", "RUSSIA", "SPAIN", "THAILAND", "UGANDA", "VENEZUELA", "WALES", "YEMEN", "ZAMBIA"];
+const validCities = ["ATLANTA", "BERLIN", "CAIRO", "DUBLIN", "EDINBURGH", "FLORENCE", "GEORGETOWN", "HOUSTON", "ISTANBUL", "JAKARTA", "KINGSTON", "LAGOS", "MIAMI", "NAIROBI", "OSLO", "PARIS", "QUITO", "ROME", "SEOUL", "TOKYO", "ULAN BATOR", "VALENCIA", "WARSAW", "XALAPA", "YOKOHAMA", "ZURICH"];
+
+function validateForm(timeout) {
+  const boy = document.getElementById("boy").value.trim().toUpperCase();
+  const girl = document.getElementById("girl").value.trim().toUpperCase();
+  const animal = document.getElementById("animal").value.trim().toUpperCase();
+  const place = document.getElementById("place").value.trim().toUpperCase();
+
+  const startsWithLetter = word => word.startsWith(currentLetter);
+
+  const animalOk = validAnimals.includes(animal) && startsWithLetter(animal);
+  const placeOk = (validCountries.includes(place) || validCities.includes(place)) && startsWithLetter(place);
+
+  if (timeout) {
+    resultDiv.textContent = "⏱️ Time's up! You lost!";
+  } else if (
+    startsWithLetter(boy) &&
+    startsWithLetter(girl) &&
+    animalOk &&
+    placeOk
+  ) {
+    resultDiv.textContent = "🎉 You win!";
+  } else {
+    resultDiv.textContent = "❌ Invalid answers. Try again!";
+  }
+
+  startBtn.disabled = false;
+  form.reset();
+  form.classList.add("hidden");
+}
