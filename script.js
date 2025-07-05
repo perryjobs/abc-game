@@ -5,17 +5,41 @@ const form = document.getElementById("word-form");
 const currentLetterSpan = document.getElementById("current-letter");
 const timerSpan = document.getElementById("timer");
 const resultDiv = document.getElementById("result");
+const nextRoundBtn = document.getElementById("next-round");
+const playerSetup = document.getElementById("player-setup");
+const startGameBtn = document.getElementById("start-game");
+const playerNameInput = document.getElementById("player-name");
+const gameArea = document.getElementById("game-area");
+const scoreDisplay = document.getElementById("score");
+const leaderboardList = document.getElementById("leaderboard-list");
 
-let interval;
-let timer;
-let currentLetter = "A";
+let interval, timer, currentLetter = "A";
+let playerName = "", score = 0;
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+// Sample Data
+const validAnimals = ["ALLIGATOR","BEAR","CAT","DOG","ELEPHANT","FLAMINGO","GIRAFFE","HORSE","IGUANA","JAGUAR","KANGAROO","LION","MONKEY","NARWHAL","OWL","PENGUIN","QUAIL","RABBIT","SNAKE","TIGER","URIAL","VULTURE","WOLF","XERUS","YAK","ZEBRA"];
+const validCountries = ["ARGENTINA","BRAZIL","CANADA","DENMARK","EGYPT","FRANCE","GERMANY","HAITI","INDIA","JAMAICA","KENYA","LIBYA","MEXICO","NIGERIA","OMAN","PERU","QATAR","RUSSIA","SPAIN","THAILAND","UGANDA","VENEZUELA","WALES","YEMEN","ZAMBIA"];
+const validCities = ["ATLANTA","BERLIN","CAIRO","DUBLIN","EDINBURGH","FLORENCE","GEORGETOWN","HOUSTON","ISTANBUL","JAKARTA","KINGSTON","LAGOS","MIAMI","NAIROBI","OSLO","PARIS","QUITO","ROME","SEOUL","TOKYO","ULAN BATOR","VALENCIA","WARSAW","XALAPA","YOKOHAMA","ZURICH"];
+
+startGameBtn.onclick = () => {
+  playerName = playerNameInput.value.trim();
+  if (!playerName) {
+    alert("Please enter your name to start.");
+    return;
+  }
+  playerSetup.classList.add("hidden");
+  gameArea.classList.remove("hidden");
+  score = 0;
+  updateScore();
+};
 
 startBtn.onclick = () => {
   startBtn.disabled = true;
   stopBtn.disabled = false;
   resultDiv.textContent = "";
   form.classList.add("hidden");
+  nextRoundBtn.classList.add("hidden");
 
   interval = setInterval(() => {
     const randIndex = Math.floor(Math.random() * letters.length);
@@ -38,7 +62,7 @@ stopBtn.onclick = () => {
     timerSpan.textContent = timeLeft;
     if (timeLeft <= 0) {
       clearInterval(timer);
-      validateForm(true); // timeout = true
+      validateForm(true);
     }
   }, 1000);
 };
@@ -49,33 +73,32 @@ form.onsubmit = (e) => {
   validateForm(false);
 };
 
-function validateForm(timeout) {
-  const boy = document.getElementById("boy").value.trim().toUpperCase();
-  const girl = document.getElementById("girl").value.trim().toUpperCase();
-  const animal = document.getElementById("animal").value.trim().toUpperCase();
-  const place = document.getElementById("place").value.trim().toUpperCase();
-
-  if (timeout) {
-    resultDiv.textContent = "⏱️ Time's up! You lost!";
-  } else if (
-    boy.startsWith(currentLetter) &&
-    girl.startsWith(currentLetter) &&
-    animal.startsWith(currentLetter) &&
-    place.startsWith(currentLetter)
-  ) {
-    resultDiv.textContent = "🎉 You win!";
-  } else {
-    resultDiv.textContent = "❌ Incorrect entries. You lose!";
-  }
-
+nextRoundBtn.onclick = () => {
   startBtn.disabled = false;
+  stopBtn.disabled = true;
+  resultDiv.textContent = "";
   form.reset();
-  form.classList.add("hidden");
+};
+
+function updateScore() {
+  scoreDisplay.textContent = score;
 }
-// Sample data (can be expanded)
-const validAnimals = ["ALLIGATOR", "BEAR", "CAT", "DOG", "ELEPHANT", "FLAMINGO", "GIRAFFE", "HORSE", "IGUANA", "JAGUAR", "KANGAROO", "LION", "MONKEY", "NARWHAL", "OWL", "PENGUIN", "QUAIL", "RABBIT", "SNAKE", "TIGER", "URIAL", "VULTURE", "WOLF", "XERUS", "YAK", "ZEBRA"];
-const validCountries = ["ARGENTINA", "BRAZIL", "CANADA", "DENMARK", "EGYPT", "FRANCE", "GERMANY", "HAITI", "INDIA", "JAMAICA", "KENYA", "LIBYA", "MEXICO", "NIGERIA", "OMAN", "PERU", "QATAR", "RUSSIA", "SPAIN", "THAILAND", "UGANDA", "VENEZUELA", "WALES", "YEMEN", "ZAMBIA"];
-const validCities = ["ATLANTA", "BERLIN", "CAIRO", "DUBLIN", "EDINBURGH", "FLORENCE", "GEORGETOWN", "HOUSTON", "ISTANBUL", "JAKARTA", "KINGSTON", "LAGOS", "MIAMI", "NAIROBI", "OSLO", "PARIS", "QUITO", "ROME", "SEOUL", "TOKYO", "ULAN BATOR", "VALENCIA", "WARSAW", "XALAPA", "YOKOHAMA", "ZURICH"];
+
+function updateLeaderboard() {
+  const leaderboard = JSON.parse(localStorage.getItem("abcLeaderboard") || "[]");
+  leaderboard.push({ name: playerName, score });
+  leaderboard.sort((a, b) => b.score - a.score);
+  leaderboard.splice(5); // Keep top 5
+
+  localStorage.setItem("abcLeaderboard", JSON.stringify(leaderboard));
+
+  leaderboardList.innerHTML = "";
+  leaderboard.forEach(entry => {
+    const li = document.createElement("li");
+    li.textContent = `${entry.name}: ${entry.score}`;
+    leaderboardList.appendChild(li);
+  });
+}
 
 function validateForm(timeout) {
   const boy = document.getElementById("boy").value.trim().toUpperCase();
@@ -83,25 +106,31 @@ function validateForm(timeout) {
   const animal = document.getElementById("animal").value.trim().toUpperCase();
   const place = document.getElementById("place").value.trim().toUpperCase();
 
-  const startsWithLetter = word => word.startsWith(currentLetter);
+  const startsWith = word => word.startsWith(currentLetter);
+  const animalOk = validAnimals.includes(animal) && startsWith(animal);
+  const placeOk = (validCountries.includes(place) || validCities.includes(place)) && startsWith(place);
 
-  const animalOk = validAnimals.includes(animal) && startsWithLetter(animal);
-  const placeOk = (validCountries.includes(place) || validCities.includes(place)) && startsWithLetter(place);
+  let roundScore = 0;
 
   if (timeout) {
     resultDiv.textContent = "⏱️ Time's up! You lost!";
-  } else if (
-    startsWithLetter(boy) &&
-    startsWithLetter(girl) &&
-    animalOk &&
-    placeOk
-  ) {
-    resultDiv.textContent = "🎉 You win!";
   } else {
-    resultDiv.textContent = "❌ Invalid answers. Try again!";
+    if (startsWith(boy)) roundScore += 10;
+    if (startsWith(girl)) roundScore += 10;
+    if (animalOk) roundScore += 10;
+    if (placeOk) roundScore += 10;
+
+    score += roundScore;
+    updateScore();
+
+    if (roundScore === 40) {
+      resultDiv.textContent = "🎉 Perfect! +40 points!";
+    } else {
+      resultDiv.textContent = `✅ You scored ${roundScore}/40 this round.`;
+    }
   }
 
-  startBtn.disabled = false;
-  form.reset();
+  updateLeaderboard();
+  nextRoundBtn.classList.remove("hidden");
   form.classList.add("hidden");
 }
