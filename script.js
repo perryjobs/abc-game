@@ -1,4 +1,4 @@
-// DOM elements
+// === DOM Elements ===
 const letterBox = document.getElementById("letter");
 const startBtn = document.getElementById("start");
 const stopBtn = document.getElementById("stop");
@@ -15,14 +15,15 @@ const scoreDisplay = document.getElementById("score");
 const leaderboardList = document.getElementById("leaderboard-list");
 const resetBtn = document.getElementById("reset-game");
 const soundToggle = document.getElementById("sound-toggle");
+const themeToggle = document.getElementById("theme-toggle");
 
-// Audio
+// === Audio ===
 const clickSound = document.getElementById("click-sound");
 const winSound = document.getElementById("win-sound");
 const loseSound = document.getElementById("lose-sound");
 const bgMusic = document.getElementById("bg-music");
 
-// Variables
+// === Variables ===
 let interval, timer;
 let currentLetter = "A";
 let playerName = "";
@@ -30,14 +31,12 @@ let score = 0;
 let soundEnabled = true;
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-const themeToggle = document.getElementById("theme-toggle");
-
-// Sample Data
+// === Data Sets ===
 const validAnimals = ["ALLIGATOR", "BEAR", "CAT", "DOG", "ELEPHANT", "FLAMINGO", "GIRAFFE", "HORSE", "IGUANA", "JAGUAR", "KANGAROO", "LION", "MONKEY", "NARWHAL", "OWL", "PENGUIN", "QUAIL", "RABBIT", "SNAKE", "TIGER", "URIAL", "VULTURE", "WOLF", "XERUS", "YAK", "ZEBRA"];
 const validCountries = ["ARGENTINA", "BRAZIL", "CANADA", "DENMARK", "EGYPT", "FRANCE", "GERMANY", "HAITI", "INDIA", "JAMAICA", "KENYA", "LIBYA", "MEXICO", "NIGERIA", "OMAN", "PERU", "QATAR", "RUSSIA", "SPAIN", "THAILAND", "UGANDA", "VENEZUELA", "WALES", "YEMEN", "ZAMBIA"];
 const validCities = ["ATLANTA", "BERLIN", "CAIRO", "DUBLIN", "EDINBURGH", "FLORENCE", "GEORGETOWN", "HOUSTON", "ISTANBUL", "JAKARTA", "KINGSTON", "LAGOS", "MIAMI", "NAIROBI", "OSLO", "PARIS", "QUITO", "ROME", "SEOUL", "TOKYO", "ULAN BATOR", "VALENCIA", "WARSAW", "XALAPA", "YOKOHAMA", "ZURICH"];
 
-// Start Game Button
+// === Game Start ===
 startGameBtn.onclick = () => {
   playerName = playerNameInput.value.trim();
   if (!playerName) {
@@ -55,7 +54,7 @@ startGameBtn.onclick = () => {
   if (soundEnabled) bgMusic.play();
 };
 
-// Start Letter Spinner
+// === Start Button ===
 startBtn.onclick = () => {
   if (soundEnabled) clickSound.play();
 
@@ -73,7 +72,7 @@ startBtn.onclick = () => {
   }, 100);
 };
 
-// Stop Spinner and Show Input Form
+// === Stop Button ===
 stopBtn.onclick = () => {
   if (soundEnabled) clickSound.play();
 
@@ -91,19 +90,19 @@ stopBtn.onclick = () => {
     timerSpan.textContent = timeLeft;
     if (timeLeft <= 0) {
       clearInterval(timer);
-      validateForm(true); // timed out
+      validateForm(true); // timeout
     }
   }, 1000);
 };
 
-// Handle Form Submit
+// === Form Submit ===
 form.onsubmit = (e) => {
   e.preventDefault();
   clearInterval(timer);
   validateForm(false);
 };
 
-// Next Round Button
+// === Next Round ===
 nextRoundBtn.onclick = () => {
   startBtn.disabled = false;
   stopBtn.disabled = true;
@@ -113,22 +112,31 @@ nextRoundBtn.onclick = () => {
   nextRoundBtn.classList.add("hidden");
 };
 
-// Reset Game Button
+// === Reset Game ===
 resetBtn.onclick = () => {
   location.reload();
 };
 
-// Sound Toggle
+// === Sound Toggle ===
 soundToggle.onchange = () => {
   soundEnabled = soundToggle.checked;
   if (!soundEnabled) {
     bgMusic.pause();
+    localStorage.setItem("abcGameSound", "off");
   } else {
     bgMusic.play();
+    localStorage.setItem("abcGameSound", "on");
   }
 };
 
-// Validate Form Answers
+// === Theme Toggle ===
+themeToggle.onchange = () => {
+  const isDark = themeToggle.checked;
+  document.body.classList.toggle("dark", isDark);
+  localStorage.setItem("abcGameTheme", isDark ? "dark" : "light");
+};
+
+// === Validate Answers ===
 function validateForm(timeout) {
   const boy = document.getElementById("boy").value.trim().toUpperCase();
   const girl = document.getElementById("girl").value.trim().toUpperCase();
@@ -174,18 +182,17 @@ function validateForm(timeout) {
   nextRoundBtn.classList.remove("hidden");
 }
 
-// Update Score Display
+// === Update Score ===
 function updateScore() {
   scoreDisplay.textContent = score;
 }
 
-// Update Leaderboard
+// === Leaderboard Handling ===
 function updateLeaderboard() {
   const leaderboard = JSON.parse(localStorage.getItem("abcLeaderboard") || "[]");
   leaderboard.push({ name: playerName, score });
   leaderboard.sort((a, b) => b.score - a.score);
-  leaderboard.splice(5); // top 5 only
-
+  leaderboard.splice(5); // Top 5 only
   localStorage.setItem("abcLeaderboard", JSON.stringify(leaderboard));
 
   leaderboardList.innerHTML = "";
@@ -195,14 +202,8 @@ function updateLeaderboard() {
     leaderboardList.appendChild(li);
   });
 }
-// === Dark Mode Theme ===
-themeToggle.onchange = () => {
-  const isDark = themeToggle.checked;
-  document.body.classList.toggle("dark", isDark);
-  localStorage.setItem("abcGameTheme", isDark ? "dark" : "light");
-};
 
-// Load Theme Preference on Page Load
+// === Load Preferences on Page Load ===
 window.onload = () => {
   const savedTheme = localStorage.getItem("abcGameTheme");
   if (savedTheme === "dark") {
