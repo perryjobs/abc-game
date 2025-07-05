@@ -122,3 +122,44 @@ form p {
   color: red;
   transform: scale(1.1);
 }
+:root {
+  --bg-color: #f0f8ff;
+  --text-color: #000;
+  --box-bg: #fff;
+  --button-bg: #e0e0e0;
+  --result-success: green;
+  --result-fail: red;
+}
+
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+.container {
+  background: var(--box-bg);
+}
+
+.controls button,
+#start-game,
+#reset-game {
+  background: var(--button-bg);
+}
+
+/* Dark Mode Class */
+body.dark {
+  --bg-color: #121212;
+  --text-color: #f0f0f0;
+  --box-bg: #1e1e1e;
+  --button-bg: #333;
+  --result-success: #8bc34a;
+  --result-fail: #e57373;
+}
+
+.result.success {
+  color: var(--result-success);
+}
+
+.result.fail {
+  color: var(--result-fail);
+}
