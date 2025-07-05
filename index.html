@@ -10,43 +10,61 @@
   <div class="container">
     <h1>ABC Game</h1>
 
-<div id="player-setup">
-  <label>Enter your name:
-    <input type="text" id="player-name" />
-  </label>
-  <button id="start-game">Start Game</button>
-</div>
+    <!-- Top Controls: Reset + Sound -->
+    <div id="top-controls" class="top-controls hidden">
+      <button id="reset-game">🔄 Reset Game</button>
+      <label><input type="checkbox" id="sound-toggle" checked /> 🔊 Sound</label>
+    </div>
 
-<div id="game-area" class="hidden">
-  <div class="score">Score: <span id="score">0</span></div>
+    <!-- Player Setup -->
+    <div id="player-setup">
+      <label>Enter your name:
+        <input type="text" id="player-name" />
+      </label>
+      <button id="start-game">Start Game</button>
+    </div>
 
-  <div class="letter-box" id="letter">A</div>
+    <!-- Game Area -->
+    <div id="game-area" class="hidden">
+      <div class="score">Score: <span id="score">0</span></div>
 
-  <div class="controls">
-    <button id="start">Start</button>
-    <button id="stop" disabled>Stop</button>
+      <div class="letter-box" id="letter">A</div>
+
+      <div class="controls">
+        <button id="start">Start</button>
+        <button id="stop" disabled>Stop</button>
+      </div>
+
+      <form id="word-form" class="hidden">
+        <p>Letter: <span id="current-letter"></span></p>
+        <label>Boy Name: <input type="text" id="boy" required /></label>
+        <label>Girl Name: <input type="text" id="girl" required /></label>
+        <label>Animal: <input type="text" id="animal" required /></label>
+        <label>Place: <input type="text" id="place" required /></label>
+        <p>Time left: <span id="timer">30</span>s</p>
+        <button type="submit">Submit</button>
+      </form>
+
+      <div id="result" class="result"></div>
+      <button id="next-round" class="hidden">Next Round</button>
+    </div>
+
+    <hr />
+
+    <!-- Leaderboard -->
+    <div id="leaderboard">
+      <h2>🏆 Leaderboard</h2>
+      <ul id="leaderboard-list"></ul>
+    </div>
   </div>
 
-  <form id="word-form" class="hidden">
-    <p>Letter: <span id="current-letter"></span></p>
-    <label>Boy Name: <input type="text" id="boy" required /></label>
-    <label>Girl Name: <input type="text" id="girl" required /></label>
-    <label>Animal: <input type="text" id="animal" required /></label>
-    <label>Place: <input type="text" id="place" required /></label>
-    <p>Time left: <span id="timer">30</span>s</p>
-    <button type="submit">Submit</button>
-  </form>
+  <!-- Audio Files -->
+  <audio id="click-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-video-game-bonus-echo-218.wav"></audio>
+  <audio id="win-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-game-win-notification-2018.wav"></audio>
+  <audio id="lose-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.wav"></audio>
+  <audio id="bg-music" src="https://assets.mixkit.co/music/preview/mixkit-game-level-completed-2059.mp3" loop></audio>
 
-  <div id="result" class="result"></div>
-  <button id="next-round" class="hidden">Next Round</button>
-</div>
-
-<hr />
-<div id="leaderboard">
-  <h2>🏆 Leaderboard</h2>
-  <ul id="leaderboard-list"></ul>
-</div>
-
+  <!-- Game Script -->
   <script src="script.js"></script>
 </body>
 </html>
