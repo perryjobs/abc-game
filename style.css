@@ -82,6 +82,20 @@ form p {
     width: 80px;
     height: 80px;
   }
+.score {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin: 10px 0;
+}
+
+#leaderboard {
+  margin-top: 30px;
+  text-align: left;
+}
+
+#leaderboard-list {
+  padding-left: 20px;
+}
 
   .controls button {
     width: 100%;
